@@ -168,7 +168,7 @@ const Splitter = () => {
         ];
         const contract = new web3.eth.Contract(
           abi,
-          "0x594781354C1B97a6C615A9E556b1Cf10D34001bc"
+          "0x4Ca34CDAcDF2D86cEb75F74678a7d5994c27BDe7"
         );
         try {
           await window.ethereum.request({ method: "eth_requestAccounts" });

@@ -32,6 +32,7 @@ contract Splitter {
         _;
     }
 
+    //deposit functions
     function depositEth(
         address[] calldata recipients,
         uint256[] calldata percentages,
@@ -80,13 +81,13 @@ contract Splitter {
         require(remaining == 0, "Percentages do not add up to 100");
     }
 
-   
+    //claim functions
     function claimEth(address depositor) external {
-        _claim(depositor, address(0));
+        _claim(msg.sender, address(0));
     }
 
     function claimToken(address depositor, address token) external {
-        _claim(depositor, token);
+        _claim(msg.sender, token);
     }
 
     function _claim(address depositor, address token) private {
@@ -119,6 +120,7 @@ contract Splitter {
         }
     }
 
+    //withdraw functions
     function withdrawEth(uint256 amount) external onlyDepositor(msg.sender, true, address(0)) {
         _withdraw(msg.sender, address(0), amount);
     }
