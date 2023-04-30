@@ -193,7 +193,8 @@ const Splitter = () => {
       // Check if Web3 is injected by a wallet
       if (window.ethereum) {
         // Connect the user's wallet to the Goerli testnet
-        await window.ethereum.request({ method: 'eth_chainId', params: ['0x5'] });
+        console.log("window.ethereum present");
+        await window.ethereum.request({ method: "eth_requestAccounts" });
         // Create a new Web3 instance using the user's wallet provider
         const web3 = new Web3(window.ethereum);
         // Get the user's selected account
@@ -368,7 +369,7 @@ const claim = async () => {
 
 const withdraw = async () => {
   const token = document.getElementById("token").value;
-  const amount = document.getElementById("amount").value;
+  const amount = document.getElementById("wAmount").value;
 
   if (token === "eth") {
     const weiAmount = web3.utils.toWei(amount, "ether");
@@ -555,7 +556,7 @@ return (
         </Grid>
         <Grid item xs={12}>
           <TextField
-            id="amount"
+            id="wAmount"
             label="Amount"
             type="number"
             variant="outlined"
