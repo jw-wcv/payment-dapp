@@ -168,7 +168,7 @@ const Splitter = () => {
         ];
         const contract = new web3.eth.Contract(
           abi,
-          "0x4Ca34CDAcDF2D86cEb75F74678a7d5994c27BDe7"
+          "0x88E2159D1f4566B1f67A582A9081e3B9Db332a24" 
         );
         try {
           await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -186,32 +186,6 @@ const Splitter = () => {
     };
     initialize();
   }, []);
-
-
-  const connectWallet = async () => {
-    try {
-      // Check if Web3 is injected by a wallet
-      if (window.ethereum) {
-        // Connect the user's wallet to the Goerli testnet
-        console.log("window.ethereum present");
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        // Create a new Web3 instance using the user's wallet provider
-        const web3 = new Web3(window.ethereum);
-        // Get the user's selected account
-        const accounts = await web3.eth.getAccounts();
-        const selectedAccount = accounts[0];
-        // Return the Web3 instance and the selected account
-        return { web3, selectedAccount };
-      } else {
-        // If no wallet is detected, throw an error
-        throw new Error('No wallet found');
-      }
-    } catch (error) {
-      console.log(error);
-      // Handle errors here
-    }
-  };
-
 
   const deposit = async () => {
     console.log("calling deposit function");
@@ -232,7 +206,7 @@ const Splitter = () => {
       console.log(weiAmount);
       const tx = {
         from: accounts[0],
-        to: "0x4Ca34CDAcDF2D86cEb75F74678a7d5994c27BDe7",
+        to: "0x88E2159D1f4566B1f67A582A9081e3B9Db332a24",
         value: weiAmount,
         data: contract.methods
           .depositEth(recipients, percentages, releaseInterval)
@@ -327,7 +301,7 @@ const Splitter = () => {
     
       try {
         await tokenContract.methods
-          .approve("0x4Ca34CDAcDF2D86cEb75F74678a7d5994c27BDe7", tokenAmount)
+          .approve("0x88E2159D1f4566B1f67A582A9081e3B9Db332a24", tokenAmount)
           .send({ from: accounts[0] });
         await contract.methods
           .depositToken(tokenAddress, tokenAmount, recipients, percentages, releaseInterval)
@@ -463,9 +437,6 @@ return (
       <Typography variant="h3" gutterBottom>
         Splitter DApp
       </Typography>
-      <Button variant="contained" color="primary" onClick={connectWallet} fullWidth>
-          Connect Wallet
-        </Button>
       <Typography variant="h5" gutterBottom>
         Deposit
       </Typography>

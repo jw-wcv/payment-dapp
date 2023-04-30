@@ -164,4 +164,22 @@ contract Splitter {
             revert("Unsupported token");
         }
     }
+
+    function getBalance(address depositor, address token) external view returns (uint256) {
+    uint256 balance = 0;
+    Deposit[] storage depositorDeposits;
+
+    if (token == address(0)) {
+        depositorDeposits = ethDeposits[depositor][depositor];
+    } else {
+        depositorDeposits = tokenDeposits[depositor][token][depositor];
+    }
+
+    for (uint256 i = 0; i < depositorDeposits.length; i++) {
+        balance += depositorDeposits[i].amount - depositorDeposits[i].releasedAmount;
+    }
+
+    return balance;
+}
+
 }
