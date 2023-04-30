@@ -371,6 +371,8 @@ const claim = async () => {
 const withdraw = async () => {
   const token = document.getElementById("token").value;
   const amount = document.getElementById("wAmount").value;
+  console.log(token);
+  console.log(amount);
 
   if (token === "eth") {
     const weiAmount = web3.utils.toWei(amount, "ether");
