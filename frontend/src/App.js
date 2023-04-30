@@ -20,6 +20,8 @@ const Splitter = () => {
   const [contract, setContract] = useState(null);
   const [accounts, setAccounts] = useState(null);
   const [abi, setAbi] = useState(null);
+  const [balance, setBalance] = useState(0);
+
 
   useEffect(() => {
     const initialize = async () => {
@@ -186,6 +188,11 @@ const Splitter = () => {
     };
     initialize();
   }, []);
+
+  const getBalance = async () => {
+    const balance = await contract.methods.getBalance(accounts[0], token).call({ from: accounts[0] });
+    setBalance(balance);
+  };
 
   const deposit = async () => {
     console.log("calling deposit function");
