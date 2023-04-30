@@ -22,10 +22,6 @@ const Splitter = () => {
   const [abi, setAbi] = useState(null);
 
   useEffect(() => {
-    /*const loadAbi = async () => {
-      const response = await fetch("../abi/abi.json");
-      return await response.json();
-    };*/
     const initialize = async () => {
       if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
@@ -513,7 +509,7 @@ return (
           />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button variant="contained" onClick={deposit} color="primary" fullWidth>
             Deposit
           </Button>
         </Grid>
@@ -534,7 +530,7 @@ return (
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button onClick={claim} variant="contained" color="primary" fullWidth>
             Claim
           </Button>
         </Grid>
@@ -565,7 +561,7 @@ return (
           />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button variant="contained" onClick={withdraw} color="primary" fullWidth>
             Withdraw
           </Button>
         </Grid>
