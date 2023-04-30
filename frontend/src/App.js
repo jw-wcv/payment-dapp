@@ -339,6 +339,7 @@ const Splitter = () => {
 
 const claim = async () => {
   const token = document.getElementById("token").value;
+  console.log(accounts);
 
   if (token === "eth") {
     try {
