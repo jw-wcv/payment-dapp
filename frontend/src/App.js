@@ -213,11 +213,22 @@ const Splitter = () => {
     initialize();
   }, []);
 
-  const getAvailableBalance = async () => {
-    const token = document.getElementById("token").value;
-    const balance = await contract.methods.getBalance(accounts[0], token).call({ from: accounts[0] });
-    setBalance(balance);
-  };
+const getAvailableBalance = async () => {
+const token = document.getElementById("token").value;
+console.log(accounts[0]);
+console.log(token);
+const tokenAddress =
+token === "eth"
+  ? "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+  : token === "dai"
+  ? "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa"
+  : token === "usdc"
+  ? "0x621d78f2EF2fd937BFca696CabaF9A779F59B3Ed"
+  : "0x3c92d5e5ac5f5e5d5c75e467e97ca65ce9d9d104";
+const balance = await contract.methods.getBalance(accounts[0], tokenAddress).call({ from: accounts[0] });
+setBalance(balance);
+console.log(balance);
+};
 
   const deposit = async () => {
     console.log("calling deposit function");
