@@ -18,6 +18,7 @@ frontend:
       commands:
         - echo `pwd`
         - cd ./frontend
+        - npm config set legacy-peer-deps true
         - npm ci 
     build:
       commands:
