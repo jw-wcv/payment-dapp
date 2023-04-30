@@ -213,7 +213,8 @@ const Splitter = () => {
     initialize();
   }, []);
 
-  const getBalance = async () => {
+  const getAvailableBalance = async () => {
+    const token = document.getElementById("token").value;
     const balance = await contract.methods.getBalance(accounts[0], token).call({ from: accounts[0] });
     setBalance(balance);
   };
@@ -593,7 +594,7 @@ return (
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={getBalance} fullWidth>
+          <Button variant="contained" color="primary" onClick={getAvailableBalance} fullWidth>
             Get Balance
           </Button>
         </Grid>
