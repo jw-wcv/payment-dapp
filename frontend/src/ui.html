@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Splitter Contract UI</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+</head>
+<body>
+  <h1>Splitter Contract</h1>
+  <div>
+    <label for="token">Token:</label>
+    <select id="token">
+      <option value="eth">ETH</option>
+      <option value="dai">DAI</option>
+      <option value="usdc">USDC</option>
+      <option value="usdt">USDT</option>
+    </select>
+  </div>
+  <div>
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount">
+  </div>
+  <div>
+    <label for="releaseInterval">Release Interval (seconds):</label>
+    <input type="number" id="releaseInterval">
+  </div>
+  <div>
+    <label for="recipients">Recipients (comma-separated):</label>
+    <input type="text" id="recipients">
+  </div>
+  <div>
+    <label for="percentages">Percentages (comma-separated):</label>
+    <input type="text" id="percentages">
+  </div>
+  <button onclick="connectWallet()">Connect Wallet</button>
+  <button onclick="deposit()">Deposit</button>
+  <button onclick="claim()">Claim</button>
+  <button onclick="withdraw()">Withdraw</button>
+  <script>
+        const contractAddress = "0x594781354C1B97a6C615A9E556b1Cf10D34001bc";
+        const daiAddress = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa";
+        const usdcAddress = "0x621d78f2EF2fd937BFca696CabaF9A779F59B3Ed";
+        const usdtAddress = "0x3c92d5e5ac5f5e5d5c75e467e97ca65ce9d9d104";
+        const ERC20_ABI = [
+                            {
+                                "constant": true,
+                                "inputs": [],
+                                "name": "totalSupply",
+                                "outputs": [{"name": "", "type": "uint256"}],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": true,
+                                "inputs": [{"name": "owner", "type": "address"}],
+                                "name": "balanceOf",
+                                "outputs": [{"name": "", "type": "uint256"}],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": false,
+                                "inputs": [
+                                {"name": "spender", "type": "address"},
+                                {"name": "value", "type": "uint256"}
+                                ],
+                                "name": "approve",
+                                "outputs": [{"name": "", "type": "bool"}],
+                                "payable": false,
+                                "stateMutability": "nonpayable",
+                                "type": "function"
+                            },
+                            {
+                                "constant": true,
+                                "inputs": [
+                                {"name": "owner", "type": "address"},
+                                {"name": "spender", "type": "address"}
+                                ],
+                                "name": "allowance",
+                                "outputs": [{"name": "", "type": "uint256"}],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": false,
+                                "inputs": [
+                                {"name": "to", "type": "address"},
+                                {"name": "value", "type": "uint256"}
+                                ],
+                                "name": "transfer",
+                                "outputs": [{"name": "", "type": "bool"}],
+                                "payable": false,
+                                "stateMutability": "nonpayable",
+                                "type": "function"
+                            },
+                            {
+                                "constant": false,
+                                "inputs": [
+                                {"name": "from", "type": "address"},
+                                {"name": "to", "type": "address"},
+                                {"name": "value", "type": "uint256"}
+                                ],
+                                "name": "transferFrom",
+                                "outputs": [{"name": "", "type": "bool"}],
+                                "payable": false,
+                                "stateMutability": "nonpayable",
+                                "type": "function"
+                            }
+                            ];
+
+      
+        let web3;
+        let contract;
+        let accounts;
+        let abi; 
+
+        async function loadAbi() {
+            const response = await fetch("../abi/abi.json");
+            return await response.json();
+        }
+
+        async function connectWallet() {
+            try {
+              if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== "0x5") {
+                  throw new Error("Please connect to the Goerli network");
+                }
+                accounts = await web3.eth.requestAccounts();
+                console.log("Connected to wallet", accounts[0]);
+              } else {
+                console.error("No web3 provider detected");
+              }
+            } catch (error) {
+              console.error("Wallet connection failed", error);
+            }
+          }
+          
+          
+          async function initialize() {
+            if (window.ethereum) {
+              web3 = new Web3(window.ethereum);
+              abi = await loadAbi();
+              contract = new web3.eth.Contract(abi, contractAddress);
+            
+              try {
+                await web3.eth.request({ method: 'eth_requestAccounts' });
+                accounts = await web3.eth.getAccounts();
+              } catch (error) {
+                console.error("User denied account access");
+              }
+            } else {
+              console.error("No web3 provider detected");
+            }
+          }
+          
+          
+      
+        async function deposit() {
+            console.log("calling deposit function");
+          const token = document.getElementById("token").value;
+          const amount = document.getElementById("amount").value;
+          const releaseInterval = document.getElementById("releaseInterval").value;
+          const recipients = document.getElementById("recipients").value.split(",").map(address => address.trim());
+          const percentages = document.getElementById("percentages").value.split(",").map(percent => parseInt(percent.trim()));
+      
+          if (token === "eth") {
+            const weiAmount = web3.utils.toWei(amount, 'ether');
+            const tx = {
+              from: accounts[0],
+              to: contractAddress,
+              value: weiAmount,
+              data: contract.methods.depositEth(recipients, percentages, releaseInterval).encodeABI()
+            };
+      
+            try {
+              const receipt = await web3.eth.sendTransaction(tx);
+              console.log("Transaction successful", receipt);
+            } catch (error) {
+              console.error("Transaction failed", error);
+            }
+          } else {
+            const tokenAddress = token === "dai" ? daiAddress : token === "usdc" ? usdcAddress : usdtAddress;
+            const tokenContract = new web3.eth.Contract(ERC20_ABI, tokenAddress);
+            const tokenAmount = web3.utils.toWei(amount, 'ether');
+      
+            try {
+              await tokenContract.methods.approve(contractAddress, tokenAmount).send({ from: accounts[0] });
+              await contract.methods.depositToken(tokenAddress, tokenAmount, recipients, percentages, releaseInterval).send({ from: accounts[0] });
+              console.log("Transaction successful");
+            } catch (error) {
+              console.error("Transaction failed", error);
+            }
+          }
+        }
+      
+        async function claim() {
+            const token = document.getElementById("token").value;
+          
+            if (token === "eth") {
+              try {
+                await contract.methods.claimEth().send({ from: accounts[0] });
+                console.log("Claim successful");
+              } catch (error) {
+                console.error("Claim failed", error);
+              }
+            } else {
+              const tokenAddress = token === "dai" ? daiAddress : token === "usdc" ? usdcAddress : usdtAddress;
+              try {
+                await contract.methods.claimToken(tokenAddress).send({ from: accounts[0] });
+                console.log("Claim successful");
+              } catch (error) {
+                console.error("Claim failed", error);
+              }
+            }
+          }
+          
+          async function withdraw() {
+            const token = document.getElementById("token").value;
+            const amount = document.getElementById("amount").value;
+          
+            if (token === "eth") {
+              const weiAmount = web3.utils.toWei(amount, 'ether');
+              try {
+                await contract.methods.withdrawEth(weiAmount).send({ from: accounts[0] });
+                console.log("Withdraw successful");
+              } catch (error) {
+                console.error("Withdraw failed", error);
+              }
+            } else {
+              const tokenAddress = token === "dai" ? daiAddress : token === "usdc" ? usdcAddress : usdtAddress;
+              const tokenAmount = web3.utils.toWei(amount, 'ether');
+              try {
+                await contract.methods.withdrawToken(tokenAddress, tokenAmount).send({ from: accounts[0] });
+                console.log("Withdraw successful");
+              } catch (error) {
+                console.error("Withdraw failed", error);
+              }
+            }
+          }
+          
+          initialize();          
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - echo Build was started on `date`
+        - echo Compiling
+        - npm config set scripts-prepend-node-path true
+        - npm config set legacy-peer-deps true
+        - cd ./backend
+        - npm run backend-install
+        # - npm run backend-start
+    postBuild:
+      commands:
+        - echo Build completed on `date`
+        - cd ..
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo `pwd`
+        - cd ./frontend
+        - npm config set scripts-prepend-node-path true
+        - npm config set legacy-peer-deps true
+        - npm ci 
+    build:
+      commands:
+        - echo Build started on `date`
+        - echo Compiling
+        - npm run build
+    postBuild:
+      commands:
+        - echo Build completed on `date`
+        - echo `pwd`
+        - npm run backend-start
+  artifacts:
+    baseDirectory: ./frontend/build
+    files:
+      - '**/*'
+      - public/**/*
+      - src/**/*
+      - package.json
+      - buildspec.yml
+  cache:
+    paths:
+      - node_modules/**/*
