@@ -403,6 +403,7 @@ const withdraw = async () => {
 
 const getBalance = async () => {
   const token = document.getElementById("token").value;
+  console.log(accounts[0]);
   const tokenAddress =
     token === "eth"
       ? null
@@ -590,7 +591,7 @@ return (
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button variant="contained" color="primary" onClick={getBalance} fullWidth>
             Get Balance
           </Button>
         </Grid>
