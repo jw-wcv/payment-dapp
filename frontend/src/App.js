@@ -232,7 +232,7 @@ const Splitter = () => {
       console.log(weiAmount);
       const tx = {
         from: accounts[0],
-        to: "0x594781354C1B97a6C615A9E556b1Cf10D34001bc",
+        to: "0x4Ca34CDAcDF2D86cEb75F74678a7d5994c27BDe7",
         value: weiAmount,
         data: contract.methods
           .depositEth(recipients, percentages, releaseInterval)
@@ -327,7 +327,7 @@ const Splitter = () => {
     
       try {
         await tokenContract.methods
-          .approve("0x594781354C1B97a6C615A9E556b1Cf10D34001bc", tokenAmount)
+          .approve("0x4Ca34CDAcDF2D86cEb75F74678a7d5994c27BDe7", tokenAmount)
           .send({ from: accounts[0] });
         await contract.methods
           .depositToken(tokenAddress, tokenAmount, recipients, percentages, releaseInterval)
