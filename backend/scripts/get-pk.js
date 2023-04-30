@@ -7,7 +7,7 @@ async function main() {
   const secrets = JSON.parse(data);
 
   // Get the mnemonic from the secrets.json file
-  const mnemonic = secrets.mnemonic;
+  const mnemonic = secrets.mnemonic2;
 
   // Use the mnemonic to derive the first account's private key
   const walletPath = ethers.utils.defaultPath;

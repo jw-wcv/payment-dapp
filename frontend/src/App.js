@@ -50,6 +50,31 @@ const Splitter = () => {
     initialize();
   }, []);
 
+
+  const connectWallet = async () => {
+    try {
+      // Check if Web3 is injected by a wallet
+      if (window.ethereum) {
+        // Connect the user's wallet to the Goerli testnet
+        await window.ethereum.request({ method: 'eth_chainId', params: ['0x5'] });
+        // Create a new Web3 instance using the user's wallet provider
+        const web3 = new Web3(window.ethereum);
+        // Get the user's selected account
+        const accounts = await web3.eth.getAccounts();
+        const selectedAccount = accounts[0];
+        // Return the Web3 instance and the selected account
+        return { web3, selectedAccount };
+      } else {
+        // If no wallet is detected, throw an error
+        throw new Error('No wallet found');
+      }
+    } catch (error) {
+      console.log(error);
+      // Handle errors here
+    }
+  };
+
+
   const deposit = async () => {
     console.log("calling deposit function");
     const token = document.getElementById("token").value;
@@ -292,6 +317,9 @@ return (
       <Typography variant="h3" gutterBottom>
         Splitter DApp
       </Typography>
+      <Button variant="contained" color="primary" onClick={connectWallet} fullWidth>
+          Connect Wallet
+        </Button>
       <Typography variant="h5" gutterBottom>
         Deposit
       </Typography>
