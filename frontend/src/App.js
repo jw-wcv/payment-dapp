@@ -139,6 +139,30 @@ const Splitter = () => {
           {
             "inputs": [
               {
+                "internalType": "address",
+                "name": "depositor",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              }
+            ],
+            "name": "getBalance",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
                 "internalType": "uint256",
                 "name": "amount",
                 "type": "uint256"
