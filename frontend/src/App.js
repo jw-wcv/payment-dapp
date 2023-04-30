@@ -341,10 +341,11 @@ const claim = async () => {
   const token = document.getElementById("token").value;
   console.log(accounts);
   console.log(accounts[0]);
+  console.log(token);
 
   if (token === "eth") {
     try {
-      await contract.methods.claimEth().send({ from: accounts[0] });
+      await contract.methods.claimEth(accounts[0]).send({ from: accounts[0] });
       console.log("Claim successful");
     } catch (error) {
       console.error("Claim failed", error);
