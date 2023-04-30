@@ -229,6 +229,7 @@ const Splitter = () => {
 
     if (token === "eth") {
       const weiAmount = web3.utils.toWei(amount, "ether");
+      console.log(weiAmount);
       const tx = {
         from: accounts[0],
         to: "0x594781354C1B97a6C615A9E556b1Cf10D34001bc",
@@ -373,6 +374,7 @@ const withdraw = async () => {
 
   if (token === "eth") {
     const weiAmount = web3.utils.toWei(amount, "ether");
+    console.log(weiAmount);
     try {
       await contract.methods.withdrawEth(weiAmount).send({ from: accounts[0] });
       console.log("Withdraw successful");
