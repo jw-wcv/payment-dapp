@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
+
 import {
   Container,
   Typography,
@@ -21,14 +22,154 @@ const Splitter = () => {
   const [abi, setAbi] = useState(null);
 
   useEffect(() => {
-    const loadAbi = async () => {
+    /*const loadAbi = async () => {
       const response = await fetch("../abi/abi.json");
       return await response.json();
-    };
+    };*/
     const initialize = async () => {
       if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
-        const abi = await loadAbi();
+        const abi = [
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "dai",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "usdc",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "usdt",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "depositor",
+                "type": "address"
+              }
+            ],
+            "name": "claimEth",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "depositor",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              }
+            ],
+            "name": "claimToken",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address[]",
+                "name": "recipients",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "percentages",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "uint256",
+                "name": "releaseInterval",
+                "type": "uint256"
+              }
+            ],
+            "name": "depositEth",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address[]",
+                "name": "recipients",
+                "type": "address[]"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "percentages",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "uint256",
+                "name": "releaseInterval",
+                "type": "uint256"
+              }
+            ],
+            "name": "depositToken",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              }
+            ],
+            "name": "withdrawEth",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              }
+            ],
+            "name": "withdrawToken",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }
+        ];
         const contract = new web3.eth.Contract(
           abi,
           "0x594781354C1B97a6C615A9E556b1Cf10D34001bc"
